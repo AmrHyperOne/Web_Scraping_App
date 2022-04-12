@@ -42,6 +42,7 @@ from Crypto.Cipher import AES
 import pandas as pd
 from fuzzywuzzy import fuzz, process
 
+
 class AESCipher:
     __doc__ = "\n    Usage:\n        c = AESCipher('password').encrypt('message')\n        m = AESCipher('password').decrypt(c)\n    Tested under Python 3 and PyCrypto 2.6.1.\n    "
 
@@ -74,7 +75,6 @@ def sqlescape(str):
 
 
 def rcurr(str):
-
     class _:
         pass
 
@@ -109,18 +109,29 @@ def Jumia(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
 
     while True:
         _.Wait()
-        with Obj(driver.execute_script('\n                 if (document.querySelectorAll("[class=\'core\']").length>0) { \n                 return 1;\n                 }  else {\n                 return 0; \n                 }  \n             ')) as (f):
+        with Obj(driver.execute_script(
+                '\n                 if (document.querySelectorAll("[class=\'core\']").length>0) { \n                 return 1;\n                 }  else {\n                 return 0; \n                 }  \n             ')) as (
+        f):
             if f == 0:
                 break
             else:
                 if f == 1:
                     product_row = driver.execute_script('return document.querySelectorAll("[class=\'core\']").length')
                     for x in range(0, product_row, 1):
-                        product_href = driver.execute_script('return document.querySelectorAll("[class=\'core\']")[' + str(x) + '].href')
-                        product_id = 'JU:' + driver.execute_script('return document.querySelectorAll("[class=\'core\']")[' + str(x) + "].getAttribute('data-id')")
-                        product_name = driver.execute_script('return document.querySelectorAll("[class=\'core\']")[' + str(x) + "].querySelector('.name').textContent")
-                        product_discount_price = driver.execute_script('return document.querySelectorAll("[class=\'core\']")[' + str(x) + "].querySelector('.prc').textContent")
-                        product_original_price = driver.execute_script('var x=document.querySelectorAll("[class=\'core\']")[' + str(x) + "].querySelectorAll('.old');if (x.length==1) {return x[0].textContent;} else {return '';}")
+                        product_href = driver.execute_script(
+                            'return document.querySelectorAll("[class=\'core\']")[' + str(x) + '].href')
+                        product_id = 'JU:' + driver.execute_script(
+                            'return document.querySelectorAll("[class=\'core\']")[' + str(
+                                x) + "].getAttribute('data-id')")
+                        product_name = driver.execute_script(
+                            'return document.querySelectorAll("[class=\'core\']")[' + str(
+                                x) + "].querySelector('.name').textContent")
+                        product_discount_price = driver.execute_script(
+                            'return document.querySelectorAll("[class=\'core\']")[' + str(
+                                x) + "].querySelector('.prc').textContent")
+                        product_original_price = driver.execute_script(
+                            'var x=document.querySelectorAll("[class=\'core\']")[' + str(
+                                x) + "].querySelectorAll('.old');if (x.length==1) {return x[0].textContent;} else {return '';}")
                         if product_original_price == '':
                             product_original_price = product_discount_price
                             product_discount_price = ''
@@ -131,7 +142,8 @@ def Jumia(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
                         Price.append(product_original_price)
                         Discount.append(product_discount_price)
                         href.append(product_href)
-                        parent.cur.execute("SELECT SKU FROM data WHERE `Product Id` = '{}';".format(sqlescape(product_id)))
+                        parent.cur.execute(
+                            "SELECT SKU FROM data WHERE `Product Id` = '{}';".format(sqlescape(product_id)))
                         SKU = parent.cur.fetchall()
                         SKU = '' if len(SKU) == 0 else SKU[0][0]
                         SKUs.append(SKU)
@@ -149,11 +161,14 @@ def Jumia(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
                         Desc = ''
                         cell = TableWidget.rowCount()
                         TableWidget.setRowCount(cell + 1)
-                        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc, product_name, '', '', product_original_price, product_discount_price, product_href, product_id])]
+                        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate(
+                            [hostname, data, SKU, Desc, product_name, '', '', product_original_price,
+                             product_discount_price, product_href, product_id])]
                         # parent.cur.execute('REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ("{}","{}","{}","{}","{}","{}","{}");'.format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, product_original_price, product_discount_price, datetime.today(), product_id))
                         # parent.con.commit()
 
-                    if not driver.execute_script('\n               with (document) {        \n                nPage_0=querySelectorAll("[aria-label=\'الصفحة التالية\']");\n                nPage_1=querySelectorAll("[aria-label=\'Next Page\']");\n                 \n                if (nPage_1.length==1) {\n                if (nPage_1[0].getAttribute("href") !=null) {\n                  nPage_1[0].click()\n                  ;return 1;\n                  } else {return 0;}\n \n \n \n                } else if (nPage_0.length==1) {\n                if (nPage_0[0].getAttribute("href") !=null) {\n                  nPage_0[0].click()\n                  ;return 1;\n                  } else {return 0;}\n \n \n                } else {return 0;}}\n                '):
+                    if not driver.execute_script(
+                            '\n               with (document) {        \n                nPage_0=querySelectorAll("[aria-label=\'الصفحة التالية\']");\n                nPage_1=querySelectorAll("[aria-label=\'Next Page\']");\n                 \n                if (nPage_1.length==1) {\n                if (nPage_1[0].getAttribute("href") !=null) {\n                  nPage_1[0].click()\n                  ;return 1;\n                  } else {return 0;}\n \n \n \n                } else if (nPage_0.length==1) {\n                if (nPage_0[0].getAttribute("href") !=null) {\n                  nPage_0[0].click()\n                  ;return 1;\n                  } else {return 0;}\n \n \n                } else {return 0;}}\n                '):
                         break
 
     Scraped_Date = [Names, Price, Discount, href, ID, SKUs]
@@ -172,7 +187,8 @@ def BTECH(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
         pass
     while 1:
         _.Wait()
-        if not driver.execute_script('\n              function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n              x = document.querySelectorAll("[amscroll_type=\'after\']");\n              if(x.length==1) {window.scroll(0,findPos(x[0]));x[0].click();return true;} else {return false;}\n              '):
+        if not driver.execute_script(
+                '\n              function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n              x = document.querySelectorAll("[amscroll_type=\'after\']");\n              if(x.length==1) {window.scroll(0,findPos(x[0]));x[0].click();return true;} else {return false;}\n              '):
             break
 
     Names = []
@@ -182,13 +198,24 @@ def BTECH(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
     Price = []
     SKUs = []
 
-    product_count = driver.execute_script('window.product=document.querySelectorAll("[class=\'plpContentWrapper\']");\n  return window.product.length;\n    ')
+    product_count = driver.execute_script(
+        'window.product=document.querySelectorAll("[class=\'plpContentWrapper\']");\n  return window.product.length;\n    ')
     for x in range(0, product_count, 1):
-        product_href = driver.execute_script('return product[{}].closest(".product-item-view").querySelector("[class=\'listingWrapperSection\']").href;'.format(x))
-        product_id = 'BT:' + driver.execute_script('return product[{}].closest(".product-item-view").querySelector("[class=\'price-box price-final_price\']").getAttribute(\'data-product-id\');'.format(x))
-        product_name = driver.execute_script('return product[{}].closest(".product-item-view").querySelector("[class=\'plpTitle\']").textContent;'.format(x))
-        p = driver.execute_script('var n=product[{}].closest(".product-item-view").querySelector("[data-price-type=\'finalPrice\']");\n          if  (n) {{return n.textContent;}}\n          '.format(x))
-        d = driver.execute_script('var n=product[{}].closest(".product-item-view").querySelector("[data-price-type=\'oldPrice\']");\n          if  (n) {{return n.textContent;}}\n          '.format(x))
+        product_href = driver.execute_script(
+            'return product[{}].closest(".product-item-view").querySelector("[class=\'listingWrapperSection\']").href;'.format(
+                x))
+        product_id = 'BT:' + driver.execute_script(
+            'return product[{}].closest(".product-item-view").querySelector("[class=\'price-box price-final_price\']").getAttribute(\'data-product-id\');'.format(
+                x))
+        product_name = driver.execute_script(
+            'return product[{}].closest(".product-item-view").querySelector("[class=\'plpTitle\']").textContent;'.format(
+                x))
+        p = driver.execute_script(
+            'var n=product[{}].closest(".product-item-view").querySelector("[data-price-type=\'finalPrice\']");\n          if  (n) {{return n.textContent;}}\n          '.format(
+                x))
+        d = driver.execute_script(
+            'var n=product[{}].closest(".product-item-view").querySelector("[data-price-type=\'oldPrice\']");\n          if  (n) {{return n.textContent;}}\n          '.format(
+                x))
         if p == None:
             p = ''
         if d == None:
@@ -218,7 +245,8 @@ def BTECH(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
         Desc = ''
         cell = TableWidget.rowCount()
         TableWidget.setRowCount(cell + 1)
-        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc,product_name, '', '', d, p, product_href, product_id])]
+        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in
+         enumerate([hostname, data, SKU, Desc, product_name, '', '', d, p, product_href, product_id])]
         # parent.cur.execute("REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ('{}','{}','{}','{}','{}','{}','{}');".format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, d, p, datetime.today(), product_id))
         # parent.con.commit()
 
@@ -246,7 +274,8 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
         _.Wait(0.01, 3)
         # time.sleep(5)
         # print('Cairo')
-        if not driver.execute_script('\n                 with (document) {\n                 function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n                 items=querySelectorAll(\'.product-container\')\n                 nlast_item=items.length-1;\n                 window.scroll(0,findPos(items[nlast_item]));\n                 if (querySelectorAll("[class=\'loadMore next button lnk_view btn btn-default\']").length==1) {return 1;} else {return 0;}\n                 }\n                 '):
+        if not driver.execute_script(
+                '\n                 with (document) {\n                 function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n                 items=querySelectorAll(\'.product-container\')\n                 nlast_item=items.length-1;\n                 window.scroll(0,findPos(items[nlast_item]));\n                 if (querySelectorAll("[class=\'loadMore next button lnk_view btn btn-default\']").length==1) {return 1;} else {return 0;}\n                 }\n                 '):
             break
 
     driver.execute_script("window.prc=document.querySelectorAll('.product-container')")
@@ -254,15 +283,20 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
     # print(product_count)
     for x in range(0, product_count, 1):
         # print('Step: ', x)
-        product_href = driver.execute_script('return window.prc[' + str(x) + '].querySelector("[class=\'product-name\']").href')
+        product_href = driver.execute_script(
+            'return window.prc[' + str(x) + '].querySelector("[class=\'product-name\']").href')
         # print(product_href)
-        product_id = 'CS:' + driver.execute_script('return window.prc[' + str(x) + "].parentElement.getAttribute('data-id-product')")
+        product_id = 'CS:' + driver.execute_script(
+            'return window.prc[' + str(x) + "].parentElement.getAttribute('data-id-product')")
         # print(product_id)
-        product_name = driver.execute_script('return window.prc[' + str(x) + '].querySelector("[class=\'product-name\']").textContent')
+        product_name = driver.execute_script(
+            'return window.prc[' + str(x) + '].querySelector("[class=\'product-name\']").textContent')
         # print(product_name)
-        product_discount_price = driver.execute_script('x=window.prc[' + str(x) + '].querySelector("[class=\'price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
+        product_discount_price = driver.execute_script('x=window.prc[' + str(
+            x) + '].querySelector("[class=\'price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
         # print(product_discount_price)
-        product_original_price = driver.execute_script('x=window.prc[' + str(x) + '].querySelector("[class=\'old-price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
+        product_original_price = driver.execute_script('x=window.prc[' + str(
+            x) + '].querySelector("[class=\'old-price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
         # print(product_original_price)
         product_discount_price = rcurr(product_discount_price)
         # print(product_discount_price)
@@ -290,7 +324,9 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
         # print(SKU)
         cell = TableWidget.rowCount()
         TableWidget.setRowCount(cell + 1)
-        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc,product_name, '', '', product_original_price, product_discount_price, product_href, product_id])]
+        [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate(
+            [hostname, data, SKU, Desc, product_name, '', '', product_original_price, product_discount_price,
+             product_href, product_id])]
         # parent.cur.execute('REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ("{}","{}","{}","{}","{}","{}","{}");'.format(sqlescape(product_name.replace('"', '').strip()), SKU, sqlescape(product_href), product_original_price, product_discount_price, datetime.today(), product_id))
         # parent.con.commit()
 
@@ -327,7 +363,7 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
 
         driver.find_element_by_xpath("//*[contains(text(), 'English')]").click()
 
-            # driver.find_element_by_xpath("//a[@href='#switch-lang=en_AE']").click()
+        # driver.find_element_by_xpath("//a[@href='#switch-lang=en_AE']").click()
 
         # while True:
         #     try:
@@ -361,7 +397,7 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
         #             "//div[@class='a-section a-text-center s-pagination-container']").text.replace(
         #             'السابق', '').replace('التالي', '')[-1])
 
-            # print(Pages)
+        # print(Pages)
 
         Names = []
         href = []
@@ -385,12 +421,14 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
                 # print('\n', int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[0]))
 
                 # try:
-                n = 1 + int(driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[-1].split('of')[0]) - int(driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[0])
+                n = 1 + int(
+                    driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[-1].split(
+                        'of')[0]) - int(
+                    driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[0])
                 # except:
                 #     n = 1 + int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[-1].split('من')[0]) - int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[0])
 
                 # print(n)
-
 
                 if product_row == n:
                     break
@@ -399,14 +437,21 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
                     _.Wait()
                     continue
 
-
-        # product_row = driver.execute_script('window.data_asin=document.querySelectorAll("[data-asin][data-uuid]");\n  return window.data_asin.length;\n    ')
+            # product_row = driver.execute_script('window.data_asin=document.querySelectorAll("[data-asin][data-uuid]");\n  return window.data_asin.length;\n    ')
             for x in range(0, product_row, 1):
-                product_href = driver.execute_script('return data_asin[{}].querySelector("a[class~=\'a-link-normal\'][class~=\'a-text-normal\']").href;'.format(x))
+                product_href = driver.execute_script(
+                    'return data_asin[{}].querySelector("a[class~=\'a-link-normal\'][class~=\'a-text-normal\']").href;'.format(
+                        x))
                 product_id = 'AM:' + driver.execute_script("return data_asin[{}].getAttribute('data-asin');".format(x))
-                product_name = driver.execute_script('return data_asin[{}].querySelector("a[class~=\'a-link-normal\'][class~=\'a-text-normal\']").textContent;'.format(x))
-                p = driver.execute_script('var n=data_asin[{}].querySelector("[class=\'a-price\'] > span.a-offscreen");\n      if  (n) {{return n.textContent;}}\n      '.format(x))
-                d = driver.execute_script('var n=data_asin[{}].querySelector("[class=\'a-price a-text-price\'] > span.a-offscreen");\n      if  (n) {{return n.textContent;}}\n      '.format(x))
+                product_name = driver.execute_script(
+                    'return data_asin[{}].querySelector("a[class~=\'a-link-normal\'][class~=\'a-text-normal\']").textContent;'.format(
+                        x))
+                p = driver.execute_script(
+                    'var n=data_asin[{}].querySelector("[class=\'a-price\'] > span.a-offscreen");\n      if  (n) {{return n.textContent;}}\n      '.format(
+                        x))
+                d = driver.execute_script(
+                    'var n=data_asin[{}].querySelector("[class=\'a-price a-text-price\'] > span.a-offscreen");\n      if  (n) {{return n.textContent;}}\n      '.format(
+                        x))
                 if p == None:
                     p = ''
                 if d == None:
@@ -440,7 +485,8 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
                 Desc = ''
                 cell = TableWidget.rowCount()
                 TableWidget.setRowCount(cell + 1)
-                [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc,product_name, '', '', d, p, product_href, product_id])]
+                [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in
+                 enumerate([hostname, data, SKU, Desc, product_name, '', '', d, p, product_href, product_id])]
                 # parent.cur.execute("REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ('{}','{}','{}','{}','{}','{}','{}');".format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, d, p, datetime.today(), product_id))
                 # parent.con.commit()
 
@@ -486,7 +532,8 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
             time.sleep(0.05)
             driver.execute_script('window.scrollTo(0,' + str(i) + ');')
 
-        if not driver.execute_script('\n               function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n               with (document) {       \n               items=querySelectorAll("[data-testid=\'trolly-button\']")\n               if(items.length>0) {\n               window.scroll(0,findPos(items[0]));\n               items[0].click();\n               return 1;\n               } else {\n                 return 0};\n               }\n              '):
+        if not driver.execute_script(
+                '\n               function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n               with (document) {       \n               items=querySelectorAll("[data-testid=\'trolly-button\']")\n               if(items.length>0) {\n               window.scroll(0,findPos(items[0]));\n               items[0].click();\n               return 1;\n               } else {\n                 return 0};\n               }\n              '):
             break
 
     Names = []
@@ -498,14 +545,24 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
 
     product_row = driver.execute_script("return document.getElementsByClassName('css-5kig18').length")
     for x in range(0, product_row, 1):
-        product_cells = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes.length')
+        product_cells = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(
+            x) + '].childNodes[0].childNodes[0].childNodes.length')
         for y in range(0, product_cells, 1):
-            product_href = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes[' + str(y) + '].querySelector("[data-testid=\'product_card_image_container\']").getElementsByTagName(\'a\')[0].href')
+            product_href = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(
+                x) + '].childNodes[0].childNodes[0].childNodes[' + str(
+                y) + '].querySelector("[data-testid=\'product_card_image_container\']").getElementsByTagName(\'a\')[0].href')
             product_id = 'CR:' + product_href[product_href.rfind('/') + 1:]
-            product_name = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes[' + str(y) + '].querySelector("[data-testid=\'product_name\']").textContent')
-            product_price_length = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes[' + str(y) + '].querySelector("[data-testid=\'product_price\']").childNodes.length')
+            product_name = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(
+                x) + '].childNodes[0].childNodes[0].childNodes[' + str(
+                y) + '].querySelector("[data-testid=\'product_name\']").textContent')
+            product_price_length = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(
+                x) + '].childNodes[0].childNodes[0].childNodes[' + str(
+                y) + '].querySelector("[data-testid=\'product_price\']").childNodes.length')
             try:
-                product_card_original_price = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes[' + str(y) + '].querySelector("[data-testid=\'product-card-original-price\']").textContent')
+                product_card_original_price = driver.execute_script(
+                    "return document.getElementsByClassName('css-5kig18')[" + str(
+                        x) + '].childNodes[0].childNodes[0].childNodes[' + str(
+                        y) + '].querySelector("[data-testid=\'product-card-original-price\']").textContent')
             except:
                 product_card_original_price = driver.execute_script(
                     "return document.getElementsByClassName('css-5kig18')[" + str(
@@ -513,7 +570,10 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
                         y) + '].querySelector("[data-testid=\'product-card-discount-price\']").textContent')
             product_card_discount_price = ''
             if product_price_length == 2:
-                product_card_discount_price = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(x) + '].childNodes[0].childNodes[0].childNodes[' + str(y) + '].querySelector("[data-testid=\'product-card-discount-price\']").textContent')
+                product_card_discount_price = driver.execute_script(
+                    "return document.getElementsByClassName('css-5kig18')[" + str(
+                        x) + '].childNodes[0].childNodes[0].childNodes[' + str(
+                        y) + '].querySelector("[data-testid=\'product-card-discount-price\']").textContent')
             product_card_discount_price = rcurr(product_card_discount_price)
             product_card_original_price = rcurr(product_card_original_price)
             Names.append(product_name)
@@ -534,7 +594,9 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
             Desc = []
             cell = TableWidget.rowCount()
             TableWidget.setRowCount(cell + 1)
-            [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc, product_name, '', '', product_card_original_price, product_card_discount_price, product_href, product_id])]
+            [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate(
+                [hostname, data, SKU, Desc, product_name, '', '', product_card_original_price,
+                 product_card_discount_price, product_href, product_id])]
             # parent.cur.execute("REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ('{}','{}','{}','{}','{}','{}','{}');".format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, product_card_original_price, product_card_discount_price, datetime.today(), product_id))
             # parent.con.commit()
 
@@ -561,14 +623,21 @@ def TWO_B(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
 
     while 1:
         _.Wait()
-        driver.execute_script('\n              function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n              window.pro=document.querySelectorAll("[class=\'product details product-item-details\']");\n              B=pro.length-1;\n              window.scroll(0,findPos(pro[B]));\n              \n              ')
+        driver.execute_script(
+            '\n              function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n              window.pro=document.querySelectorAll("[class=\'product details product-item-details\']");\n              B=pro.length-1;\n              window.scroll(0,findPos(pro[B]));\n              \n              ')
         product_row = driver.execute_script('return window.pro.length;')
         for x in range(0, product_row, 1):
-            product_href = driver.execute_script('return window.pro[' + str(x) + '].querySelector("[class=\'product-item-link\']").href;')
-            product_id = '2B:' + driver.execute_script('return window.pro[{}].querySelector("[class=\'price-box price-final_price\']").getAttribute(\'data-product-id\');'.format(x))
-            product_name = driver.execute_script('return window.pro[' + str(x) + '].querySelector("[class=\'product-item-link\']").textContent;')
-            product_original_price = driver.execute_script('x =window.pro[' + str(x) + '].querySelector("[data-price-type=\'oldPrice\']"); if(x !== null) {return x.textContent;} else {return\'\';}')
-            product_discount_price = driver.execute_script('return window.pro[' + str(x) + '].querySelector("[data-price-type=\'finalPrice\']").textContent')
+            product_href = driver.execute_script(
+                'return window.pro[' + str(x) + '].querySelector("[class=\'product-item-link\']").href;')
+            product_id = '2B:' + driver.execute_script(
+                'return window.pro[{}].querySelector("[class=\'price-box price-final_price\']").getAttribute(\'data-product-id\');'.format(
+                    x))
+            product_name = driver.execute_script(
+                'return window.pro[' + str(x) + '].querySelector("[class=\'product-item-link\']").textContent;')
+            product_original_price = driver.execute_script('x =window.pro[' + str(
+                x) + '].querySelector("[data-price-type=\'oldPrice\']"); if(x !== null) {return x.textContent;} else {return\'\';}')
+            product_discount_price = driver.execute_script(
+                'return window.pro[' + str(x) + '].querySelector("[data-price-type=\'finalPrice\']").textContent')
             if not product_original_price:
                 product_original_price = product_discount_price
                 product_discount_price = ''
@@ -595,12 +664,83 @@ def TWO_B(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
             Desc = []
             cell = TableWidget.rowCount()
             TableWidget.setRowCount(cell + 1)
-            [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate([hostname, data, SKU, Desc, product_name, '', '', product_original_price, product_discount_price, product_href, product_id])]
+            [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate(
+                [hostname, data, SKU, Desc, product_name, '', '', product_original_price, product_discount_price,
+                 product_href, product_id])]
             # parent.cur.execute("REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ('{}','{}','{}','{}','{}','{}','{}');".format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, product_original_price, product_discount_price, datetime.today(), product_id))
             # parent.con.commit()
 
-        if not driver.execute_script('\n     items = document.querySelectorAll("[class=\'item pages-item-next\'] a");\n     if(items.length>0) {\n       items[0].click();\n       return 1;\n       } else {return 0;}\n     '):
+        if not driver.execute_script(
+                '\n     items = document.querySelectorAll("[class=\'item pages-item-next\'] a");\n     if(items.length>0) {\n       items[0].click();\n       return 1;\n       } else {return 0;}\n     '):
             break
+
+    Scraped_Date = [Names, Price, Discount, href, ID, SKUs]
+
+    return Scraped_Date, Old_Data
+
+
+def Dream2000(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
+    Old_Data = FN_Old_Data(parent)
+    _ = Page_loaded(driver)
+    _.Wait()
+    if driver.find_elements_by_xpath("//div[@class = 'ui-dialog "
+                                     "ui-widget ui-widget-content "
+                                     "ui-corner-all ui-front "
+                                     "mage-dropdown-dialog']")[0].text == 'English':
+        # print('English')
+        element = driver.find_elements_by_xpath("//div[@class = 'ui-dialog "
+                                                "ui-widget ui-widget-content "
+                                                "ui-corner-all ui-front "
+                                                "mage-dropdown-dialog']")[0]
+        webdriver.ActionChains(driver).move_to_element(element).click(element).perform()
+
+    Names = []
+    href = []
+    ID = []
+    Discount = []
+    Price = []
+    SKUs = []
+
+    while 1:
+        _.Wait()
+        products = driver.find_elements_by_xpath("//a[@class = 'product-item-link']")
+        prices = driver.find_elements_by_xpath("//div[@class = 'price-box price-final_price']")
+        elems = driver.find_elements_by_css_selector(".product-item-link")
+        links = [elem.get_attribute('href') for elem in elems]
+
+        elems = driver.find_elements_by_xpath("//div[@class = 'price-box price-final_price']")
+        IDs = [elem.get_attribute('data-product-id') for elem in elems]
+
+        for x in range(0, len(products), 1):
+            product_href = links[x]
+            product_id = 'DM:' + IDs[x]
+            product_name = products[x].text
+            product_original_price = prices[x].text
+            product_discount_price = prices[x].text
+            product_discount_price = rcurr(product_discount_price)
+            product_original_price = rcurr(product_original_price)
+            Names.append(product_name)
+            ID.append(product_id)
+            Price.append(product_original_price)
+            Discount.append(product_discount_price)
+            href.append(product_href)
+            parent.cur.execute("SELECT SKU FROM data WHERE `Product Id` = '{}';".format(sqlescape(product_id)))
+            SKU = parent.cur.fetchall()
+            SKU = '' if len(SKU) == 0 else SKU[0][0]
+            SKUs.append(SKU)
+            Desc = []
+            cell = TableWidget.rowCount()
+            TableWidget.setRowCount(cell + 1)
+            [TableWidget.setItem(cell, x, QTableWidgetItem(str(y).strip())) for x, y in enumerate(
+                [hostname, data, SKU, Desc, product_name, '', '', product_original_price, product_discount_price,
+                 product_href, product_id])]
+            # parent.cur.execute("REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`) VALUES ('{}','{}','{}','{}','{}','{}','{}');".format(sqlescape(product_name.replace('"', '').strip()), SKU, product_href, product_original_price, product_discount_price, datetime.today(), product_id))
+            # parent.con.commit()
+
+        if not driver.find_elements_by_xpath("//a[@class = 'action  next']"):
+            break
+        else:
+            driver.find_elements_by_xpath("//a[@class = 'action  next']")[-1].click()
 
     Scraped_Date = [Names, Price, Discount, href, ID, SKUs]
 
@@ -609,7 +749,6 @@ def TWO_B(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
 
 # Matching
 def Matching(parent, Price, Discount, Name, Old_Data):
-
     # Old_Data = pd.read_sql_query('Select * from hyper_pos', parent.con)
     #
     # Mapping = {'SKU': 'BARCODE',
@@ -646,7 +785,6 @@ def Matching(parent, Price, Discount, Name, Old_Data):
             Price = float(Discount.replace(',', '').replace('\u200f', ''))
 
         # print(Price, type(Price))
-
 
         m = process.extractOne(Name,
                                Old_Data[(Old_Data.PROM_PRICE.astype(float) < Price * 1.25) &

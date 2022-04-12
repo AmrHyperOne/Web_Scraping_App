@@ -295,7 +295,7 @@ class Create(QMainWindow, Web_Scraping_Ui):
                                     child.text(1)).netloc.upper()
                                 self.driver.get(child.text(1))
                                 # print(hostname)
-                            # print(hostname)
+                            print(hostname)
                             if hostname == 'WWW.CARREFOUREGYPT.COM':
                                 Scraped_Data, Old_Data = Carrefouregypt(
                                     self.driver, hostname, self.frm_Results.tbl_data, child.text(0), self.parent)
@@ -320,6 +320,10 @@ class Create(QMainWindow, Web_Scraping_Ui):
                                 All_Scraped_Data.append(Scraped_Data)
                             elif hostname == 'WWW.AMAZON.EG':
                                 Scraped_Data, Old_Data = Amazon(self.driver, hostname, self.frm_Results.tbl_data, child.text(
+                                    0), self.parent)
+                                All_Scraped_Data.append(Scraped_Data)
+                            elif hostname == 'DREAM2000.COM':
+                                Scraped_Data, Old_Data = Dream2000(self.driver, hostname, self.frm_Results.tbl_data, child.text(
                                     0), self.parent)
                                 All_Scraped_Data.append(Scraped_Data)
 
@@ -354,12 +358,15 @@ class Create(QMainWindow, Web_Scraping_Ui):
                 # QtWidgets.QMessageBox.about(self, "Info", "Process Done Successfully")
                 # li = [self.Matching(x) for x in ProductNames]
             elif sender.text() in ('Amazon', 'Souq', 'Carrefouregypt', '2B', 'Cairosales',
-                                   'Btech', 'Jumia'):
+                                   'Btech', 'Jumia', 'Dream2000'):
+
+                print(sender.text())
 
                 self.Driver()
 
                 URL = {'Amazon': 'https://www.amazon.eg/',  'Souq': 'https://deals.souq.com/',  'Carrefouregypt': 'https://www.carrefouregypt.com/mafegy/ar',
-                       '2B': 'https://2b.com.eg/ar/',  'Cairosales': 'https://cairosales.com/',  'Btech': 'https://btech.com/',  'Jumia': 'https://www.jumia.com.eg/'}
+                       '2B': 'https://2b.com.eg/ar/',  'Cairosales': 'https://cairosales.com/',  'Btech': 'https://btech.com/',  'Jumia': 'https://www.jumia.com.eg/'
+                       ,  'Dream2000': 'https://dream2000.com/'}
                 self.driver.get(URL[sender.text()])
             elif sender.text() == 'Exit':
                 self.close()
@@ -368,6 +375,8 @@ class Create(QMainWindow, Web_Scraping_Ui):
 
         except Exception as e:
             print('4')
+            import traceback
+            print(traceback.format_exc())
             show_pop('Error', str(e),
                      QMessageBox.Critical)
             self.close()
@@ -606,6 +615,7 @@ class Create(QMainWindow, Web_Scraping_Ui):
                                                                                     'URL_Cairosales',
                                                                                     'URL_Btech',
                                                                                     'URL_Jumia',
+                                                                                    'URL_Dream2000',
                                                                                     'act_Exit')]
             self.TWCat = self.findChild(QTreeWidget, 'TWCat')
             self.toolBar = self.findChild(QToolBar, 'toolBar')
