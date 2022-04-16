@@ -292,9 +292,29 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
         product_name = driver.execute_script(
             'return window.prc[' + str(x) + '].querySelector("[class=\'product-name\']").textContent')
         # print(product_name)
+
         product_discount_price = driver.execute_script('x=window.prc[' + str(
             x) + '].querySelector("[class=\'price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
         # print(product_discount_price)
+
+
+        driver.execute_script(f"window.open('{product_href}')")
+
+        window_name = driver.window_handles[-1]
+
+        driver.switch_to.window(window_name=window_name)
+
+        try:
+            li = driver.find_elements_by_xpath("//ul[@id = 'combinationswithimages']")[0].text.split('\n')
+            li = [li[i + 1].replace('EGP ', '').replace(',', '') for i in range(0, len(li), 2)]
+            product_discount_price = min(li)
+        except:
+            pass
+
+        driver.close()
+
+        driver.switch_to.window(driver.window_handles[0])
+
         product_original_price = driver.execute_script('x=window.prc[' + str(
             x) + '].querySelector("[class=\'old-price product-price\']");if(x !== null) {return x.textContent;} else {return \'\'} ;')
         # print(product_original_price)
@@ -337,6 +357,8 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
 
 def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
     try:
+
+        print('Amazon Here')
 
         Old_Data = FN_Old_Data(parent)
         _ = Page_loaded(driver)
@@ -408,12 +430,14 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
 
         for i in range(Pages):
 
-            while True:
+            # while True:
 
-                _.Wait()
+            _.Wait()
 
-                product_row = driver.execute_script(
-                    'window.data_asin=document.querySelectorAll("[data-asin][data-uuid]");\n  return window.data_asin.length;\n    ')
+            product_row = driver.execute_script(
+                'window.data_asin=document.querySelectorAll("[data-asin][data-uuid]");\n  return window.data_asin.length;\n    ')
+
+            print('Row:', product_row)
 
                 # print(product_row)
 
@@ -421,21 +445,23 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
                 # print('\n', int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[0]))
 
                 # try:
-                n = 1 + int(
-                    driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[-1].split(
-                        'of')[0]) - int(
-                    driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[0])
+                # print('test: ', driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[-1].split(
+                #         'of')[0], driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[0])
+                # n = 1 + int(
+                #     driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[-1].split(
+                #         'of')[0]) - int(
+                #     driver.find_elements_by_xpath("//span[contains(text(), 'results')]")[0].text.split('–')[0])
                 # except:
                 #     n = 1 + int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[-1].split('من')[0]) - int(driver.find_elements_by_xpath("//span[@dir = 'auto']")[0].text.split('-')[0])
 
                 # print(n)
 
-                if product_row == n:
-                    break
-                else:
-                    # time.sleep(1)
-                    _.Wait()
-                    continue
+                # if product_row == n:
+                #     break
+                # else:
+                #     # time.sleep(1)
+                #     _.Wait()
+                #     continue
 
             # product_row = driver.execute_script('window.data_asin=document.querySelectorAll("[data-asin][data-uuid]");\n  return window.data_asin.length;\n    ')
             for x in range(0, product_row, 1):
@@ -494,7 +520,7 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
                 driver.find_element_by_xpath(
                     "//a[@class='s-pagination-item s-pagination-next s-pagination-button s-pagination-separator']").click()
             except:
-                pass
+                break
 
             # if driver.execute_script('\n  var n=document.querySelector("ul[class=\'a-pagination\'] > li.a-last > a");\n    \n  if  (n) {\n    n.click();\n    return 1;\n  } else {\n    return 2;\n  }\n  ') == 2:
             # if driver.execute_script('\n  var n=document.querySelector("#search > div.s-desktop-width-max.s-desktop-content.s-opposite-dir.sg-row > div.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16 > div > span:nth-child(4) > div.s-main-slot.s-result-list.s-search-results.sg-row > div.a-section.a-spacing-none.s-result-item.s-flex-full-width.s-widget > span > div > div > ul > li.a-last > a")\n  if  (n) {\n    n.click();\n    return 1;\n  } else {\n    return 2;\n  }\n  ') == 2:
