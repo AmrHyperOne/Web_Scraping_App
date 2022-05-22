@@ -9,6 +9,7 @@ from PyQt5 import uic
 from MyLib import *
 from threading import Thread
 from UiWebScraping import Ui_MainWindow as Web_Scraping_Ui
+from UserPassword import CL_UserPassword
 
 
 class Create(QMainWindow, Web_Scraping_Ui):
@@ -31,7 +32,7 @@ class Create(QMainWindow, Web_Scraping_Ui):
 
         self.parent.cur.execute(
             "SELECT data_urls.ID,data_urls.`Category Name`,data_urls.`Sub Category Name`,data_urls.URL FROM data_urls WHERE (`MAC address` = '0xbce92ffb3d3d' and `Category Name` in ('TV', 'Mobile') ) "
-            "or data_urls.`MAC address` = '{}';".format(self.parent.MACaddress))
+            "or data_urls.`MAC address` = '{}' or ;".format(self.parent.MACaddress))
             # "")
 
         data = self.parent.cur.fetchall()
@@ -639,9 +640,20 @@ class Create(QMainWindow, Web_Scraping_Ui):
             with Obj(self) as (_):
                 _.lbl1 = QLabel()
                 _.lbl1.setText(
-                    u"<B>Web Scraping v2.1 \xa9 2022 <span style='color:Blue'>Hyper</span><span style='color:red'>One</span> Application Team. All Rights Reserved</B>")
+                    u"<B>Web Scraping v2.2 \xa9 2022 <span style='color:Blue'>Hyper</span><span style='color:red'>One</span> Application Team. All Rights Reserved</B>")
                 _.statusBar().addWidget(_.lbl1)
-            self.show()
+
+            self.Cashier_window = CL_UserPassword(self)
+            self.Cashier_window.setModal(True)
+            self.Cashier_window.show()
+
+            self.Cashier_window.pushButton_Enter.clicked.connect(self.Cashier_window.GetUserPassword)
+
+            # Username, Password = self.Cashier_window.Username, self.Cashier_window.Password
+
+            # if Username == 'admin' and Password == '123':
+            #     self.show()
+
         except Exception as e:
             print('3')
             show_pop('Error', str(e),
