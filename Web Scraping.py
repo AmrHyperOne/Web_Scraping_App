@@ -30,9 +30,11 @@ class Create(QMainWindow, Web_Scraping_Ui):
         # # WHERE data_urls.`MAC address` = '{}';".format(self.parent.MACaddress))
         # # "")
 
+        print(self.parent.MACaddress)
+
         self.parent.cur.execute(
-            "SELECT data_urls.ID,data_urls.`Category Name`,data_urls.`Sub Category Name`,data_urls.URL FROM data_urls WHERE (`MAC address` = '0xbce92ffb3d3d' and `Category Name` in ('TV', 'Mobile') ) "
-            "or data_urls.`MAC address` = '{}' or ;".format(self.parent.MACaddress))
+            "SELECT data_urls.ID,data_urls.`Category Name`,data_urls.`Sub Category Name`,data_urls.URL FROM data_urls WHERE (`MAC address` = '0xbce92ffb3d3d' and `Category Name` in ('TV', 'Mobile', 'H.A.') ) "
+            "or data_urls.`MAC address` = '{}' ;".format(self.parent.MACaddress))
             # "")
 
         data = self.parent.cur.fetchall()
@@ -503,6 +505,12 @@ class Create(QMainWindow, Web_Scraping_Ui):
                         Old_Data = Old_Data[Old_Data.Category == 'MOBILE']
                         Cat = 'Mobile'
 
+                    elif 'H.A.' in self.TWCat.currentItem().text(0):
+                        Old_Data = Old_Data[Old_Data.Category == 'H.A']
+                        Cat = 'H.A'
+
+                    print('Cat: ', self.TWCat.currentItem().text(0))
+
                     # print(Scraped_Data[0][i])
 
                     KeyBrand = [x for x in Brands if x.lower() in Scraped_Data[0][i].rstrip().lstrip().lower()]
@@ -546,6 +554,7 @@ class Create(QMainWindow, Web_Scraping_Ui):
 
                 self.frm_Results.lbl2.setText('{} %  Match Processing'.format(round((i+1) / len(Scraped_Data[0]) * 100, 2)))
 
+                print('REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`, `Category Name`) VALUES ("{}","{}","{}","{}","{}","{}","{}","{}");'.format(sqlescape(Scraped_Data[0][i].replace('"', '').strip()), SKU, sqlescape(Scraped_Data[3][i]), Scraped_Data[1][i], Scraped_Data[2][i], datetime.today(), Scraped_Data[4][i], Cat))
                 self.parent.cur.execute('REPLACE data (`Product Name`,SKU, Link , `Product Original Price`,`Product Discount Price`,`Date Update`,`Product Id`, `Category Name`) VALUES ("{}","{}","{}","{}","{}","{}","{}","{}");'.format(sqlescape(Scraped_Data[0][i].replace('"', '').strip()), SKU, sqlescape(Scraped_Data[3][i]), Scraped_Data[1][i], Scraped_Data[2][i], datetime.today(), Scraped_Data[4][i], Cat))
                 self.parent.con.commit()
 
@@ -656,6 +665,8 @@ class Create(QMainWindow, Web_Scraping_Ui):
 
         except Exception as e:
             print('3')
+            import traceback
+            print(traceback.format_exc())
             show_pop('Error', str(e),
                      QMessageBox.Critical)
             self.close()
@@ -670,8 +681,10 @@ class MyApp(QApplication):
             # self.ui = uic.loadUi('Loading.ui')
             # self.ui.show()
             self.setStyle('Fusion')
-            self.con = mysql.connect(host='192.168.1.83', user='ehasanin',
-                                     passwd='123P@ssword', db='H1WebScrap', charset='utf8mb4')
+            # self.con = mysql.connect(host='192.168.1.83', user='ehasanin',
+            #                          passwd='123P@ssword', db='H1WebScrap', charset='utf8mb4')
+            self.con = mysql.connect(host='127.0.0.1', user='root',
+                                     passwd='@mrMohamed27', db='H1WebScrap', charset='utf8mb4')
             self.cur = self.con.cursor()
             self.cur.execute('SELECT  static_key.`Key` FROM static_key')
             data = self.cur.fetchall()

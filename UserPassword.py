@@ -19,13 +19,16 @@ class CL_UserPassword(QtWidgets.QDialog):
             print(e)
 
     def GetUserPassword(self):
-        Username = self.lineEdit_Username.text()
-        Password = self.lineEdit_Password.text()
+        self.Username = self.lineEdit_Username.text()
+        self.Password = self.lineEdit_Password.text()
 
-        dic = {1: ['admin', '123']}
+        dic = {1: ['admin', '123'], 2: ['user1', 'user1'], 3: ['user2', 'user2'], 4: ['user3', 'user3']}
 
         # if Username == 'admin' and Password == '123':
-        if [Username, Password] in dic.values():
+        if [self.Username, self.Password] in dic.values():
+            if self.Username != 'admin' and self.Password != '123':
+                self.parent.parent.MACaddress = self.Username
+                self.parent.read_db()
             self.parent.show()
             self.parent.Cashier_window.close()
 
