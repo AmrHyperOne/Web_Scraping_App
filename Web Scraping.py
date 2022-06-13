@@ -681,10 +681,10 @@ class MyApp(QApplication):
             # self.ui = uic.loadUi('Loading.ui')
             # self.ui.show()
             self.setStyle('Fusion')
-            # self.con = mysql.connect(host='192.168.1.83', user='ehasanin',
-            #                          passwd='123P@ssword', db='H1WebScrap', charset='utf8mb4')
-            self.con = mysql.connect(host='127.0.0.1', user='root',
-                                     passwd='@mrMohamed27', db='H1WebScrap', charset='utf8mb4')
+            self.con = mysql.connect(host='192.168.1.83', user='ehasanin',
+                                     passwd='123P@ssword', db='H1WebScrap', charset='utf8mb4')
+            # self.con = mysql.connect(host='127.0.0.1', user='root',
+            #                          passwd='@mrMohamed27', db='H1WebScrap', charset='utf8mb4')
             self.cur = self.con.cursor()
             self.cur.execute('SELECT  static_key.`Key` FROM static_key')
             data = self.cur.fetchall()
