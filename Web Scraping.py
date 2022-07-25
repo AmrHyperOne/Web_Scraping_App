@@ -325,6 +325,10 @@ class Create(QMainWindow, Web_Scraping_Ui):
                                 Scraped_Data, Old_Data = Amazon(self.driver, hostname, self.frm_Results.tbl_data, child.text(
                                     0), self.parent)
                                 All_Scraped_Data.append(Scraped_Data)
+                            elif hostname == 'WWW.AMAZON.COM':
+                                Scraped_Data, Old_Data = Amazon(self.driver, hostname, self.frm_Results.tbl_data, child.text(
+                                    0), self.parent)
+                                All_Scraped_Data.append(Scraped_Data)
                             elif hostname == 'DREAM2000.COM':
                                 Scraped_Data, Old_Data = Dream2000(self.driver, hostname, self.frm_Results.tbl_data, child.text(
                                     0), self.parent)
@@ -497,6 +501,8 @@ class Create(QMainWindow, Web_Scraping_Ui):
 
                 if len(All_SKUs[i]) == 0:
 
+                    print('Test Text Cat: ', self.TWCat.currentItem().text(0))
+
                     if 'TV' in self.TWCat.currentItem().text(0):
                         Old_Data = Old_Data[Old_Data.Category == 'TV']
                         Cat = 'TV'
@@ -633,8 +639,8 @@ class Create(QMainWindow, Web_Scraping_Ui):
             Add_toolbar(self, self.toolBar, QIcon(
                 '.\\res\\01.png'), 'Scraping', False)
             Add_toolbar(self, self.toolBar, QIcon('.\\res\\02.png'), 'Add', False)
-            Add_toolbar(self, self.toolBar, QIcon(
-                '.\\res\\03.png'), 'Remove', False)
+            # Add_toolbar(self, self.toolBar, QIcon(
+            #     '.\\res\\03.png'), 'Remove', False)
             self.toolBar.addSeparator()
             Add_toolbar(self, self.toolBar, QIcon(
                 '.\\res\\09.png'), 'All Products', False)
@@ -649,7 +655,7 @@ class Create(QMainWindow, Web_Scraping_Ui):
             with Obj(self) as (_):
                 _.lbl1 = QLabel()
                 _.lbl1.setText(
-                    u"<B>Web Scraping v2.2 \xa9 2022 <span style='color:Blue'>Hyper</span><span style='color:red'>One</span> Application Team. All Rights Reserved</B>")
+                    u"<B>Web Scraping v2.3 \xa9 2022 <span style='color:Blue'>Hyper</span><span style='color:red'>One</span> Application Team. All Rights Reserved</B>")
                 _.statusBar().addWidget(_.lbl1)
 
             self.Cashier_window = CL_UserPassword(self)

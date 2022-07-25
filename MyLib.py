@@ -118,6 +118,9 @@ def Jumia(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
                 if f == 1:
                     product_row = driver.execute_script('return document.querySelectorAll("[class=\'core\']").length')
                     for x in range(0, product_row, 1):
+                        print("x: ", x)
+                        if x is None:
+                            break
                         product_href = driver.execute_script(
                             'return document.querySelectorAll("[class=\'core\']")[' + str(x) + '].href')
                         product_id = 'JU:' + driver.execute_script(
@@ -259,7 +262,7 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
     Old_Data = FN_Old_Data(parent)
     _ = Page_loaded(driver)
     # print('Cairo')
-    _.Wait(0.01, 3)
+    _.Wait()
     if driver.find_element_by_xpath("//div[@class='languages-block show_mobile active']").text != 'عربى':
         driver.find_element_by_xpath("//div[@class='languages-block show_mobile active']").click()
 
@@ -271,16 +274,20 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
     SKUs = []
 
     while 1:
-        _.Wait(0.01, 3)
-        # time.sleep(5)
+        # _.Wait(0.01, 3)
+        _.Wait()
+        time.sleep(5)
         # print('Cairo')
         if not driver.execute_script(
                 '\n                 with (document) {\n                 function findPos(obj) {var curtop = 0;if (obj.offsetParent) {do {curtop += obj.offsetTop;} while (obj = obj.offsetParent);return [curtop];}}\n                 items=querySelectorAll(\'.product-container\')\n                 nlast_item=items.length-1;\n                 window.scroll(0,findPos(items[nlast_item]));\n                 if (querySelectorAll("[class=\'loadMore next button lnk_view btn btn-default\']").length==1) {return 1;} else {return 0;}\n                 }\n                 '):
             break
 
-    driver.execute_script("window.prc=document.querySelectorAll('.product-container')")
-    product_count = driver.execute_script('return window.prc.length')
-    # print(product_count)
+    while 1:
+        driver.execute_script("window.prc=document.querySelectorAll('.product-container')")
+        product_count = driver.execute_script('return window.prc.length')
+        if int(product_count) == int(driver.find_element_by_xpath("//span[@class='heading-counter']").text.split(' ')[2]):
+            break
+
     for x in range(0, product_count, 1):
         # print('Step: ', x)
         product_href = driver.execute_script(
@@ -356,6 +363,7 @@ def Cairosales(driver, hostname, TableWidget=QTableWidget, data=string, parent=N
 
 
 def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None):
+    print('hiiiiiiiiiiiiii')
     try:
 
         print('Amazon Here')
@@ -364,7 +372,20 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
         _ = Page_loaded(driver)
         _.Wait()
         try:
+
+            time.sleep(.5)
+
+            # print('Change: ', driver.find_element_by_xpath("//span[@class='a-button-text']"))
+            # #
+            # driver.find_element_by_xpath("//span[@class='a-button-text']").click()
+
+            driver.refresh()
+
+            _.Wait()
+
             driver.find_element_by_xpath("//span[@class='a-size-medium a-color-link a-text-bold']").click()
+
+
         except:
             pass
         # while 1:
@@ -427,6 +448,8 @@ def Amazon(driver, hostname, TableWidget=QTableWidget, data=string, parent=None)
         Discount = []
         Price = []
         SKUs = []
+
+        print('Pages: ', Pages)
 
         for i in range(Pages):
 
@@ -545,10 +568,10 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
     _.Wait()
     driver.find_element_by_xpath("//*[@class='css-anesr6']").click()
     _.Wait()
-    if driver.find_element_by_xpath("//*[@class='css-1kddnjl']").text == 'English':
-        driver.find_element_by_xpath("//*[@class='css-1kddnjl']").click()
-    else:
-        driver.find_element_by_xpath("//*[@data-testid='close-icon']").click()
+    # if driver.find_element_by_xpath("//*[@class='css-1bckr87']").text == 'English':
+    #     driver.find_element_by_xpath("//*[@class='css-1bckr87']").click()
+    # else:
+    #     driver.find_element_by_xpath("//*[@data-testid='close-icon']").click()
     while 1:
         _.Wait()
         y = int(driver.execute_script('return window.scrollY;'))
@@ -570,6 +593,7 @@ def Carrefouregypt(driver, hostname, TableWidget=QTableWidget, data=string, pare
     SKUs = []
 
     product_row = driver.execute_script("return document.getElementsByClassName('css-5kig18').length")
+    print('Product_row: ', product_row)
     for x in range(0, product_row, 1):
         product_cells = driver.execute_script("return document.getElementsByClassName('css-5kig18')[" + str(
             x) + '].childNodes[0].childNodes[0].childNodes.length')

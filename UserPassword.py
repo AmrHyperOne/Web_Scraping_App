@@ -22,7 +22,10 @@ class CL_UserPassword(QtWidgets.QDialog):
         self.Username = self.lineEdit_Username.text()
         self.Password = self.lineEdit_Password.text()
 
-        dic = {1: ['admin', '123'], 2: ['user1', 'user1'], 3: ['user2', 'user2'], 4: ['user3', 'user3']}
+        dic = {1: ['admin', '123'], 2: ['user1', 'user1'], 3: ['user2', 'user2'], 4: ['user3', 'user3']
+               , 5: ['user4', 'user4'], 6: ['user5', 'user5'], 7: ['user6', 'user6']
+               , 8: ['user7', 'user7'], 9: ['user8', 'user8'], 10: ['user9', 'user9']
+               , 11: ['user10', 'user10']}
 
         # if Username == 'admin' and Password == '123':
         if [self.Username, self.Password] in dic.values():
